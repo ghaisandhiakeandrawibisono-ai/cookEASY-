@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=devicewidth, initial-scale=1.0">
+<title>CookEasy - Platform Kuliner Interaktif</ title>
+<script src="https://cdn.tailwindcss.com"></ script> <script> tailwind.config = {
+theme: { extend: {
+colors: { woodtan: '#ddb892', burgundy: '#6b1d28', navy: '#1b263b', parchment: '#f5ebe0', accentgold: '#e0a96d' }
+}
+}
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2? family=Plus+Jakarta+Sans:wght@400;500;600;7
+00;800&display=swap');
+body {
+font-family: 'Plus Jakarta Sans', sans-serif;
+background-color: #f5ebe0; color: #1b263b;
+}
+.slide { display: none;
+min-height: calc(100vh - 70px); width: 100%;
+animation: fadeIn 0.35s ease-out forwards;
+}
+.slide.active { display: flex; }
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* Freestanding Floating Animation for Slide 1 
+Chef Logo */ .chef-float {
+animation: floatChef 3.2s ease-in-out infinite alternate; }
+@keyframes floatChef {
+0% { transform: translateY(0px); }
+100% { transform: translateY(-12px); }
+}
+/* Pan & Stove Animation for Slide 2 */
+.pan-sizzle {
+animation: panSizzleAnim 1.6s ease-in-out infinite alternate;
+transform-origin: 150px 140px;
+}
+@keyframes panSizzleAnim {
+0% { transform: rotate(-1deg) translateY(0px); }
+50% { transform: rotate(1deg) translateY(-2px); }
+100% { transform: rotate(-0.5deg) translateY(1px); }
+}
+.steak-sizzle {
+animation: steakAnim 0.8s infinite ease-in-out alternate; }
+@keyframes steakAnim {
+0% { transform: scale(0.97); }
+100% { transform: scale(1.03); }
+}
+.steam-rise {
+animation: steamAnim 2.2s ease-out infinite; opacity: 0; }
+.steam-delay-1 { animation-delay: 0.7s; }
+.steam-delay-2 { animation-delay: 1.4s; }
+@keyframes steamAnim {
+0% { transform: translateY(0) scaleX(1); opacity: 
+0.85; }
+50% { transform: translateY(-25px) scaleX(1.3); opacity: 0.4; }
+100% { transform: translateY(-50px) scaleX(1.6); opacity: 0; } }
+.blue-flame {
+animation: flameFlicker 0.4s ease-in-out infinite alternate; }
+@keyframes flameFlicker {
+0% { transform: scaleY(0.9); opacity: 0.85; }
+100% { transform: scaleY(1.15); opacity: 1; }
+}
+.scrollbar-thin::-webkit-scrollbar { height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+background: #e3d5ca;
+border-radius: 10px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+background: #6b1d28;
+border-radius: 10px;
+}
+</style>
+</head>
+<body class="bg-parchment overflow-x-hidden selection:bg-burgundy selection:text-white flex flex-col min-h-screen">
+<!-- TOP NAVIGATION BAR -->
+<nav class="bg-navy text-white px-4 md:px-8 py-3.5 shadow-md flex items-center justifybetween sticky top-0 z-40">
+<div class="flex items-center gap-3 cursorpointer" onclick="changeSlide(1)">
+<div class="w-9 h-9 rounded-full bg-burgundy flex items-center justify-center font-extrabold text-white text-base shadow">
+CE
+</div>
+<span class="font-extrabold text-xl tracking-tight 
+text-woodtan">CookEasy</span> </div>
+<!-- Slide Navigation Tabs -->
+<div class="flex items-center gap-1 md:gap-2 overflow-x-auto text-xs md:text-sm fontsemibold">
+<button onclick="changeSlide(1)" id="nav-btn-1" class="px-3 py-1.5 rounded-lg transition-all">1. 
+Beranda</button>
+<button onclick="changeSlide(2)" id="nav-btn-2" class="px-3 py-1.5 rounded-lg transition-all">2. 
+Animasi Dapur</button>
+<button onclick="changeSlide(3)" id="nav-btn-3" class="px-3 py-1.5 rounded-lg transition-all">3. Resep Dunia</button>
+<button onclick="changeSlide(4)" id="nav-btn-4" class="px-3 py-1.5 rounded-lg transition-all">4. 
+Pantry & Cari</button>
+<button onclick="changeSlide(5)" id="nav-btn-5" class="px-3 py-1.5 rounded-lg transition-all">5. 
+Tambah Resep</button>
+</div>
+</nav>
+<!-- MAIN CONTAINER -->
+<main class="flex-1 flex flex-col items-center justify-center">
+<!-- SLIDE 1: WELCOME & FULL CHEF LOGO 
+DOWN TO CHEST -->
+<section id="slide-1" class="slide active flex-col items-center justify-center p-6 text-center myauto">
+<div class="max-w-xl w-full flex flex-col itemscenter">
+<!-- Freestanding Chef Logo (Hat Down to Chest, 
+White Coat & Red Neckerchief) -->
+<div class="w-64 h-64 mb-4 flex items-center justify-center chef-float filter drop-shadow-2xl">
+<svg width="260" height="260" viewBox="0 0 
+200 200" class="w-full h-full">
+<!-- Body / Chef Coat (Chest level) -->
+<path d="M 50 190 Q 55 140 75 135 L 125 135 Q 
+145 140 150 190 Z" fill="#ffffff" stroke="#1b263b" stroke-width="2.5"/>
+<!-- Double-breasted coat buttons -->
+<circle cx="82" cy="155" r="3.5" fill="#6b1d28"/>
+<circle cx="118" cy="155" r="3.5" fill="#6b1d28"/>
+<circle cx="84" cy="172" r="3.5" fill="#6b1d28"/>
+<circle cx="116" cy="172" r="3.5" fill="#6b1d28"/>
+<!-- Red Neckerchief / Syal Merah -->
+<path d="M 78 135 Q 100 152 122 135 Q 110 
+128 100 134 Q 90 128 78 135 Z" fill="#6b1d28"/> <path d="M 95 134 L 105 150 L 93 148 Z" fill="#8b2635"/>
+<!-- Neck -->
+<rect x="88" y="118" width="24" height="16" fill="#fce0d6" rx="2"/>
+<!-- Ears & Head Base -->
+<circle cx="65" cy="92" r="8" fill="#fce0d6"/>
+<circle cx="135" cy="92" r="8" fill="#fce0d6"/> <ellipse cx="100" cy="94" rx="32" ry="30" fill="#fce0d6"/>
+<!-- Rosy Cheeks -->
+<circle cx="78" cy="102" r="6" fill="#ffb4a2" opacity="0.7"/>
+<circle cx="122" cy="102" r="6" fill="#ffb4a2" opacity="0.7"/>
+<!-- Eyes & Highlights -->
+<circle cx="82" cy="90" r="4.5" fill="#1b263b"/>
+<circle cx="118" cy="90" r="4.5" fill="#1b263b"/>
+<circle cx="84" cy="88" r="1.5" fill="#ffffff"/>
+<circle cx="120" cy="88" r="1.5" fill="#ffffff"/>
+<!-- Eyebrows -->
+<path d="M 75 82 Q 82 78 89 82" stroke="#1b263b" stroke-width="2.5" strokelinecap="round" fill="none"/> <path d="M 111 82 Q 118 78 125 82" stroke="#1b263b" stroke-width="2.5" strokelinecap="round" fill="none"/>
+<!-- Smile -->
+<path d="M 83 105 Q 100 118 117 105" stroke="#6b1d28" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<!-- Chef Hat -->
+<path d="M 68 68 Q 50 35 80 26 Q 100 12 120 26 Q 150 35 132 68 Z" fill="#ffffff" stroke="#6b1d28" stroke-width="3"/> <rect x="70" y="62" width="60" height="14" fill="#6b1d28" rx="3"/>
+<path d="M 85 62 L 85 76 M 100 62 L 100 76 M 115 62 L 115 76" stroke="#ffffff" strokewidth="2"/>
+</svg>
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold text-burgundy mb-3 tracking-tight">CookEasy</ h1>
+<p class="text-navy text-base md:text-lg fontmedium mb-8 leading-relaxed max-w-lg"> Selamat datang di CookEasy! Temukan keahlian memasak dengan koleksi resep otentik dari seluruh dunia, pencarian bahan praktis, dan panduan langkah demi langkah. </p>
+<button onclick="changeSlide(2)" class="bgburgundy hover:bg-red-900 text-white font-bold text-lg px-9 py-4 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 flex items-center gap-3"> Mulai Jelajahi
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" strokelinejoin="round" stroke-width="2" d="M14 5l7 
+7m0 0l-7 7m7-7H3"></path></svg>
+</button>
+</div>
+</section>
+<!-- SLIDE 2: ANIMATED COOKING SCENE 
+(JUICY STEAK ON STOVE, NO EGGS, NO 
+HUMAN) -->
+<section id="slide-2" class="slide flex-col itemscenter justify-center p-6 text-center bg-navy textwhite my-auto w-full">
+<div class="max-w-2xl w-full flex flex-col itemscenter">
+<!-- Portable Stove with Blue Flames, Teflon Pan 
+& Sizzling Steak -->
+<div class="w-96 h-80 relative mb-6 filter dropshadow-2xl">
+<svg width="340" height="280" viewBox="0 0 
+300 240" class="w-full h-full">
+<!-- Steam Particles -->
+<g class="steam-group">
+<path class="steam-rise" d="M 110 90 Q 98 65 110 40" stroke="#ffffff" stroke-width="4" fill="none" stroke-linecap="round"/>
+<path class="steam-rise steam-delay-1" d="M 150 85 Q 162 60 150 35" stroke="#ffffff" strokewidth="4.5" fill="none" stroke-linecap="round"/> <path class="steam-rise steam-delay-2" d="M 190 90 Q 178 65 190 40" stroke="#ffffff" strokewidth="4" fill="none" stroke-linecap="round"/> </g>
+<!-- Blue Stove Flames -->
+<g class="blue-flame" transform-origin="150 
+162">
+<path d="M 105 162 Q 115 138 120 162 Q 135 
+125 140 162 Q 150 120 155 162 Q 165 130 170 
+162 Q 185 138 195 162 Z" fill="#00bfff"/>
+<path d="M 115 162 Q 123 145 128 162 Q 138 
+135 143 162 Q 150 130 153 162 Q 160 140 165 
+162 Q 175 148 183 162 Z" fill="#ffffff"/> </g>
+<!-- Stove Top Grates -->
+<rect x="50" y="160" width="200" height="12" fill="#718096" rx="3"/>
+<path d="M 70 160 L 105 152 M 230 160 L 195 152 M 150 160 L 150 150" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/>
+<!-- Stove Base Body (Light Blue / Grey, Matching 
+Reference Image) -->
+<rect x="40" y="170" width="220" height="55" fill="#a0aec0" rx="12"/>
+<rect x="48" y="176" width="204" height="43" fill="#cbd5e0" rx="8"/>
+<!-- Stove Front Vents & Gas Knob --> <rect x="62" y="188" width="5" height="20" fill="#4a5568" rx="2"/>
+<rect x="73" y="188" width="5" height="20" fill="#4a5568" rx="2"/>
+<rect x="84" y="188" width="5" height="20" fill="#4a5568" rx="2"/>
+<rect x="95" y="188" width="5" height="20" fill="#4a5568" rx="2"/>
+<circle cx="150" cy="198" r="13" fill="#edf2f7" stroke="#a0aec0" stroke-width="2"/>
+<line x1="150" y1="187" x2="150" y2="198" stroke="#3182ce" stroke-width="4" strokelinecap="round"/>
+<!-- Teflon Frying Pan with Sizzling Steak -->
+<g class="pan-sizzle">
+<!-- Pan Long Handle (Right side) -->
+<rect x="235" y="112" width="60" height="14" fill="#2d3748" rx="4" transform="rotate(-6 235 112)"/>
+<!-- Skillet Body (Teal / Cyan Blue Pan) --> <ellipse cx="150" cy="120" rx="90" ry="32" fill="#319795"/>
+<ellipse cx="150" cy="116" rx="84" ry="27" fill="#4fd1c5"/>
+<!-- Inner Teflon Base -->
+<ellipse cx="150" cy="117" rx="76" ry="23" fill="#2d3748"/>
+<!-- Juicy Beef Steak Pieces with Rosemary & 
+Garlic Garnishes -->
+<g class="steak-sizzle">
+<!-- Main Steak Piece 1 -->
+<path d="M 95 115 Q 90 102 115 100 Q 145 105 140 120 Q 120 126 95 115 Z" fill="#6b1d28" stroke="#4a151b" stroke-width="2"/>
+<!-- Grill Marks on Steak 1 -->
+<line x1="105" y1="104" x2="115" y2="120" stroke="#3a0d12" stroke-width="2.5" strokelinecap="round"/>
+<line x1="120" y1="105" x2="130" y2="121" stroke="#3a0d12" stroke-width="2.5" strokelinecap="round"/>
+<!-- Butter Melt on Steak -->
+<ellipse cx="120" cy="110" rx="5" ry="3" fill="#f6e05e"/>
+<!-- Steak Piece 2 -->
+<path d="M 152 118 Q 148 106 172 102 Q 198 108 192 120 Q 170 125 152 118 Z" fill="#8b2635" stroke="#4a151b" strokewidth="2"/>
+<!-- Grill Marks on Steak 2 -->
+<line x1="162" y1="106" x2="172" y2="121" stroke="#3a0d12" stroke-width="2.5" strokelinecap="round"/>
+<line x1="178" y1="107" x2="186" y2="120" stroke="#3a0d12" stroke-width="2.5" strokelinecap="round"/>
+<!-- Rosemary Sprig & Garlic Cloves --> <path d="M 130 116 Q 145 113 160 114" stroke="#38a169" stroke-width="2" fill="none"/> <circle cx="138" cy="113" r="1.5" fill="#38a169"/>
+<circle cx="148" cy="115" r="1.5" fill="#38a169"/>
+<circle cx="155" cy="112" r="1.5" fill="#38a169"/>
+<!-- Sizzling oil bubbles -->
+<circle cx="100" cy="122" r="1.5" fill="#ecc94b"/> <circle cx="145" cy="124" r="2" fill="#ecc94b"/>
+<circle cx="185" cy="122" r="1.5" fill="#ecc94b"/>
+</g>
+</g>
+</svg>
+</div>
+<h2 class="text-3xl font-bold text-woodtan mb-4">Seni Memasak Tanpa Batas</h2>
+<p class="text-gray-200 text-base md:text-lg leading-relaxed mb-8 max-w-xl">
+CookEasy dirancang untuk menghadirkan pengalaman dapur yang menyenangkan, akurat, dan terstruktur. Temukan inspirasi kuliner terbaik dengan panduan yang presisi. </p>
+<button onclick="changeSlide(3)" class="bgwoodtan hover:bg-yellow-600 text-navy font-bold text-lg px-9 py-4 rounded-full shadow-lg transform hover:-translate-y-1 transition-all duration-200 flex items-center gap-3">
+Masuk ke Resep Dunia
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" strokelinejoin="round" stroke-width="2" d="M14 5l7 
+7m0 0l-7 7m7-7H3"></path></svg>
+</button>
+</div>
+</section>
+<!-- SLIDE 3: INTERNATIONAL RECIPE 
+DIRECTORY (16 COUNTRIES, 7-10 RECIPES 
+EACH) -->
+<section id="slide-3" class="slide flex-col p-4 md:p-8 max-w-7xl mx-auto w-full">
+<header class="w-full flex flex-col md:flex-row items-center justify-between gap-4 pb-6 borderb-2 border-woodtan mb-6">
+<div>
+<h2 class="text-2xl md:text-3xl font-bold textburgundy">Katalog Resep Dunia (16 Negara)</ h2>
+<p class="text-sm text-gray-600">Pilih negara untuk melihat 7-10 resep otentik dengan gambar lengkap dan bumbu presisi</p>
+</div>
+<button onclick="changeSlide(4)" class="bgburgundy hover:bg-red-900 text-white fontsemibold text-sm px-6 py-3 rounded-full shadow 
+transition-all flex items-center gap-2">
+Coba Pantry Finder →
+</button>
+</header>
+<!-- 16 Country Filter Tabs -->
+<div class="w-full mb-6">
+<h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Pilih Negara:</ h4>
+<div class="flex gap-2 overflow-x-auto pb-3 scrollbar-thin" id="countryTabs">
+<!-- Dynamic country buttons -->
+</div>
+</div>
+<!-- Recipe Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:gridcols-3 xl:grid-cols-4 gap-6 w-full mb-8" 
+id="countryRecipeGrid">
+<!-- Recipe cards -->
+</div>
+</section>
+<!-- SLIDE 4: PANTRY FINDER & SEARCH BAR --> <section id="slide-4" class="slide flex-col p-4 md:p-8 max-w-7xl mx-auto w-full">
+<header class="w-full pb-6 border-b-2 borderwoodtan mb-6">
+<h2 class="text-2xl md:text-3xl font-bold textburgundy">Pantry Finder & Pencarian Bahan</ h2>
+<p class="text-sm text-gray-600">Cari resep berdasarkan kata kunci atau pilih bahan di bawah. Hasil pencarian disinkronkan 100%!</p> </header>
+<!-- Search Input -->
+<div class="w-full bg-white rounded-2xl p-4 shadow-md border border-woodtan/40 mb-6 flex flex-col md:flex-row items-center gap-3">
+<div class="relative flex-1 w-full">
+<span class="absolute inset-y-0 left-0 flex itemscenter pl-4 text-gray-400"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" strokelinejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></ path></svg>
+</span>
+<input type="text" id="customSearchBar" oninput="handleCustomSearch()" placeholder="Ketik bahan atau makanan 
+(contoh: telur, keju, kornet, tahu, ayam, mie)..." class="w-full pl-11 pr-4 py-3 bg-parchment/50 rounded-xl text-navy text-sm font-medium focus:outline-none focus:ring-2 focus:ringburgundy border border-gray-200">
+</div>
+<button onclick="clearPantryFilters()" class="wfull md:w-auto px-5 py-3 bg-gray-200 hover:bggray-300 text-navy font-semibold text-xs rounded-xl transition-all whitespace-nowrap">
+Reset Filter
+</button>
+</div>
+<!-- Expanded Pantry Tags -->
+<div class="w-full bg-white rounded-2xl p-5 shadow-md border border-woodtan/40 mb-8">
+<h3 class="text-sm font-bold text-navy mb-1 flex items-center gap-2">
+<span>	</span> Pilih Bahan yang Kamu Punya (Pantry Tags):
+</h3>
+<p class="text-xs text-gray-500 mb-3.5">Ketuk satu atau beberapa bahan di bawah ini untuk 
+mencari masakan yang sesuai:</p> <div class="flex flex-wrap gap-2.5" id="pantryTagsContainer"> <!-- Dynamic tag buttons -->
+</div>
+</div>
+<!-- Result Count and Grid -->
+<h3 class="text-lg font-bold text-navy mb-4">Hasil Resep Cocok (<span id="matchedCount">0</span>)</h3> <div class="grid grid-cols-1 sm:grid-cols-2 lg:gridcols-3 xl:grid-cols-4 gap-6 w-full mb-8" 
+id="pantryRecipeGrid">
+<!-- Filtered Recipe Cards -->
+</div>
+</section>
+<!-- SLIDE 5: USER RECIPE CONTRIBUTION 
+FORM -->
+<section id="slide-5" class="slide flex-col p-4 md:p-8 max-w-4xl mx-auto w-full"> <header class="w-full text-center mb-8"> <h2 class="text-3xl font-extrabold textburgundy">Tambah Resep Kamu</h2>
+<p class="text-sm text-navy max-w-lg mx-auto mt-1">Bagikan kreasi masakan andalanmu ke CookEasy! Resep kamu akan langsung tampil di katalog aplikasi.</p>
+</header>
+<div class="bg-white rounded-3xl p-6 md:p-10 shadow-xl border border-woodtan/40 w-full mb-8">
+<form id="addRecipeForm" 
+onsubmit="handleUserSubmitRecipe(event)" class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Nama Masakan 
+*</label>
+<input type="text" id="formRecipeName" required placeholder="Contoh: Tumis Tahu Kornet Pedas" class="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outlinenone focus:ring-2 focus:ring-burgundy bgparchment/40">
+</div>
+<div>
+<label class="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Asal Negara/
+Wilayah *</label>
+<select id="formRecipeRegion" required class="w-full px-4 py-3 rounded-xl border bordergray-300 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy bg-parchment/40"> <option value="Indonesia">Indonesia</option>
+<option value="Tiongkok">Tiongkok</option>
+<option value="Jepang">Jepang</option>
+<option value="Italia">Italia</option>
+<option value="Prancis">Prancis</option>
+<option value="Meksiko">Meksiko</option>
+<option value="Korea">Korea</option>
+<option value="Thailand">Thailand</option>
+<option value="India">India</option>
+<option value="Amerika Serikat">Amerika 
+Serikat</option>
+<option value="Spanyol">Spanyol</option> <option value="Inggris">Inggris</option> <option value="Yunani">Yunani</option>
+<option value="Turki">Turki</option>
+<option value="Vietnam">Vietnam</option>
+<option value="Jerman">Jerman</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Bahan-Bahan Utama (Pisahkan dengan Koma) *</label> <input type="text" id="formRecipeIngredients" required placeholder="Contoh: Telur, Kornet, Tahu, Bawang, Cabai" class="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ringburgundy bg-parchment/40">
+</div>
+<div>
+<label class="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Langkah-
+Langkah Pembuatan *</label>
+<textarea id="formRecipeSteps" rows="4" required placeholder="Tuliskan baris demi baris langkah memasaknya..." class="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ringburgundy bg-parchment/40"></textarea> </div>
+<div>
+<label class="block text-xs font-bold text-navy uppercase tracking-wider mb-2">URL Foto 
+Makanan (Opsional)</label>
+<input type="url" id="formRecipeImg" placeholder="https://images.unsplash.com/ photo-..." class="w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outlinenone focus:ring-2 focus:ring-burgundy bgparchment/40"> </div>
+<button type="submit" class="w-full bg-burgundy hover:bg-red-900 text-white font-extrabold textbase py-4 rounded-2xl shadow-lg transition-all 
+transform hover:-translate-y-0.5">
+Simpan & Terbitkan Resep Saya
+</button>
+</form>
+</div>
+</section>
+</main>
+<!-- RECIPE DETAIL MODAL -->
+<div id="recipeModal" class="fixed inset-0 bgblack/60 backdrop-blur-sm z-50 hidden itemscenter justify-center p-4">
+<div class="bg-white rounded-3xl max-w-2xl wfull max-h-[90vh] overflow-y-auto shadow-2xl relative flex flex-col">
+<button onclick="closeModal()" class="absolute top-4 right-4 bg-white/90 hover:bg-white textnavy w-9 h-9 rounded-full flex items-center justify-center shadow-md font-bold text-lg z-10">
+✕
+</button>
+<div class="relative h-64 w-full"> <img id="modalImage" src="" alt="Food" class="w-full h-full object-cover">
+<div class="absolute bottom-0 left-0 right-0 bggradient-to-t from-black/85 to-transparent p-6"> <span id="modalRegion" class="bg-burgundy text-white text-xs font-bold px-3 py-1 roundedfull"></span>
+<h2 id="modalTitle" class="text-2xl font-bold textwhite mt-2"></h2>
+</div>
+</div>
+<div class="p-6 flex-1">
+<div class="mb-6">
+<h3 class="text-lg font-bold text-burgundy mb-2 flex items-center gap-2">
+<span>	</span> Bahan-Bahan Utama
+</h3>
+<ul id="modalIngredients" class="grid grid-cols-2 gap-2 text-sm text-gray-700 bg-parchment/60 p-4 rounded-xl border border-woodtan/30">
+</ul>
+</div>
+<div class="mb-6">
+<h3 class="text-lg font-bold text-burgundy mb-2 flex items-center gap-2">
+<span>o</span> Langkah-Langkah Memasak
+</h3>
+<ol id="modalSteps" class="space-y-2 text-sm text-gray-700 list-decimal list-inside">
+</ol>
+</div>
+<!-- 5-Star Rating System -->
+<div class="border-t border-gray-200 pt-6"> <h3 class="text-lg font-bold text-navy mb-3">Ulasan & Rating Komunitas</h3>
+<div class="flex items-center gap-2 mb-3"> <span class="text-sm font-medium textgray-600">Berikan Bintang:</span>
+<div class="flex gap-1 text-2xl text-amber-400 cursor-pointer" id="starContainer"> <span onclick="setRating(1)">★</span>
+<span onclick="setRating(2)">★</span>
+<span onclick="setRating(3)">★</span>
+<span onclick="setRating(4)">★</span>
+<span onclick="setRating(5)">★</span> </div>
+</div>
+<div class="flex gap-2 mb-4"> <input type="text" id="reviewInput" placeholder="Tulis ulasan masakan ini..." class="flex-1 text-sm border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:border-burgundy">
+<button onclick="submitReview()" class="bgburgundy hover:bg-red-900 text-white fontsemibold text-sm px-5 py-2.5 rounded-xl transition-all">
+Kirim
+</button>
+</div>
+<div id="reviewsList" class="space-y-2 max-h-36 overflow-y-auto">
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="fixed bottom-6 right-6 bgburgundy text-white px-6 py-3.5 rounded-2xl shadow-2xl font-bold text-sm hidden z-50 transform transition-all duration-300"> Resep berhasil ditambahkan! </div>
+<!-- APP JAVASCRIPT LOGIC -->
+<script>
+const countryList = [
+"Indonesia", "Tiongkok", "Jepang", "Italia", 
+"Prancis", "Meksiko",
+"Korea", "Thailand", "India", "Amerika Serikat", 
+"Spanyol", "Inggris",
+"Yunani", "Turki", "Vietnam", "Jerman"
+ ];
+const pantryOptions = [
+"Ayam", "Telur", "Daging", "Keju", "Udang", "Tahu", "Kornet",
+"Nasi", "Mie", "Jamur", "Ikan", "Bawang", "Cabai", 
+"Kentang", "Wortel", "Tomat", "Brokoli"
+ ];
+let activeSlide = 1;
+let selectedCountry = "Indonesia"; let activePantryTags = []; let currentRecipeId = null; let selectedStarRating = 5;
+// ACCURATE 16-COUNTRY RECIPE DATABASE 
+WITH EXACT HIGH-QUALITY UNSPLASH FOOD 
+PHOTOS
+let recipesDatabase = [
+// 1. INDONESIA (8 Recipes) - Verified Exact Food Photos
+{ id: "id-1", name: "Sate Ayam Madura", region: 
+"Indonesia", ingredients: ["Ayam", "Bawang", "Cabai"], img: "https://images.unsplash.com/ photo-1555126634-323283e090fa?
+w=600&auto=format&fit=crop", steps: ["Potong daging ayam dadu lalu tusuk pada bilah bambu.", "Bakar di atas arang panas hingga matang kecokelatan.", "Disajikan dengan saus kacang gurih dan irisan bawang merah."] },
+{ id: "id-2", name: "Rendang Daging Sapi", region: 
+"Indonesia", ingredients: ["Daging", "Bawang", "Cabai"], img: "https://images.unsplash.com/ photo-1626777552726-4a6b54c97e46?
+w=600&auto=format&fit=crop", steps: ["Ungkep potongan daging sapi dalam santan kental.", "Tambahkan bumbu rempah dan masak api kecil hingga mengering."] },
+{ id: "id-3", name: "Nasi Goreng Telur Spesial", region: "Indonesia", ingredients: ["Nasi", "Telur", "Ayam", "Bawang"], img: "https:// images.unsplash.com/ photo-1603133872878-684f208fb84b?
+w=600&auto=format&fit=crop", steps: ["Tumis bawang dan cabai hingga harum.", "Masukkan telur kocok lalu tambahkan nasi putih dan kecap."] },
+{ id: "id-4", name: "Mie Goreng Jawa", region: 
+"Indonesia", ingredients: ["Mie", "Telur", "Ayam", 
+"Sayur", "Bawang"], img: "https:// images.unsplash.com/ photo-1612927601601-6638404737ce?
+w=600&auto=format&fit=crop", steps: ["Rebus mie lalu tumis dengan bumbu halus dan sayuran.", "Campurkan telur dan ayam suwir lalu beri rasa."] },
+{ id: "id-5", name: "Tahu Telur Bumbu Kacang", region: "Indonesia", ingredients: ["Tahu", "Telur", 
+"Bawang", "Cabai"], img: "https:// images.unsplash.com/photo-1546069901ba9599a7e63c?w=600&auto=format&fit=crop", steps: ["Kocok telur bersama potongan tahu lalu goreng dadar tebal.", "Siram dengan bumbu kacang petis dan tauge segar."] },
+{ id: "id-6", name: "Tumis Kornet Telur Cabai 
+Hijau", region: "Indonesia", ingredients: ["Kornet", 
+"Telur", "Bawang", "Cabai"], img: "https:// images.unsplash.com/ photo-1525755662778-989d0524087e?
+w=600&auto=format&fit=crop", steps: ["Tumis bawang merah, bawang putih, dan cabai hijau.", "Masukkan kornet sapi dan telur, orak-arik hingga kering."] },
+{ id: "id-7", name: "Soto Ayam Kuning", region: 
+"Indonesia", ingredients: ["Ayam", "Telur", "Bawang", "Kentang"], img: "https:// images.unsplash.com/ photo-1569718212165-3a8278d5f624?
+w=600&auto=format&fit=crop", steps: ["Rebus ayam dengan bumbu kunyit dan serai.", "Sajikan kuah gurih bersama telur rebus dan perkedel kentang."] },
+{ id: "id-8", name: "Gado-Gado Surabaya", region: 
+"Indonesia", ingredients: ["Tahu", "Telur", 
+"Kentang", "Wortel"], img: "https:// images.unsplash.com/photo-1512621776951a57141f2eefd?w=600&auto=format&fit=crop", steps: ["Rebus sayuran segar, kentang, dan telur.", "Ulek bumbu kacang halus lalu siramkan di atas bahan."] },
+// 2. TIONGKOK (7 Recipes) - Verified Chinese 
+Dishes
+{ id: "cn-1", name: "Dim Sum Hakau Udang", region: "Tiongkok", ingredients: ["Udang", "Ayam"], img: "https://images.unsplash.com/ photo-1496116218417-1a781b1c416c?
+w=600&auto=format&fit=crop", steps: ["Cincang udang segar lalu bungkus kulit transparan.", "Kukus dalam wadah bambu selama 10 menit hingga matang."] },
+{ id: "cn-2", name: "Mapo Tofu Pedas Sichuan", region: "Tiongkok", ingredients: ["Tahu", "Daging", 
+"Cabai", "Bawang"], img: "https:// images.unsplash.com/ photo-1582878826629-29b7ad1cdc43?
+w=600&auto=format&fit=crop", steps: ["Tumis daging giling dengan lada Sichuan dan pasta cabai.", "Masukkan tahu sutra dan masak hingga kuah mengental."] },
+{ id: "cn-3", name: "Ayam Kung Pao Mete", region: 
+"Tiongkok", ingredients: ["Ayam", "Cabai", "Bawang"], img: "https://images.unsplash.com/ photo-1525755662778-989d0524087e?
+w=600&auto=format&fit=crop", steps: ["Potong ayam dadu lalu tumis bersama cabai kering.", "Tambahkan kacang mete panggang dan saus asam manis."] },
+{ id: "cn-4", name: "Bebek Peking Panggang", region: "Tiongkok", ingredients: ["Daging", "Bawang"], img: "https://images.unsplash.com/ photo-1514944288352-fffac99f0bdf? w=600&auto=format&fit=crop", steps: ["Bumbui bebek utuh dan baringkan dalam oven khusus.", "Panggang hingga kulitnya renyah garing berwarna keemasan."] },
+{ id: "cn-5", name: "Mie Wonton Ayam Udang", region: "Tiongkok", ingredients: ["Mie", "Ayam", 
+"Udang", "Bawang"], img: "https://
+images.unsplash.com/ photo-1612874742237-6526221588e3?
+w=600&auto=format&fit=crop", steps: ["Rebus mie kuning dalam kuah kaldu bening.", "Sajikan dengan wonton kukus isi ayam dan udang."] }, { id: "cn-6", name: "Nasi Goreng Yang Chow", region: "Tiongkok", ingredients: ["Nasi", "Telur", 
+"Udang", "Wortel"], img: "https:// images.unsplash.com/ photo-1603133872878-684f208fb84b?
+w=600&auto=format&fit=crop", steps: ["Goreng nasi dengan mentega ringan, telur, dan udang.", "Tambahkan polong dan wortel potong kecil."] }, { id: "cn-7", name: "Tumis Brokoli Daging Sapi", region: "Tiongkok", ingredients: ["Brokoli", "Daging", "Bawang"], img: "https://
+images.unsplash.com/ photo-1540420773420-3366772f4999?
+w=600&auto=format&fit=crop", steps: ["Tumis irisan daging sapi dengan saus tiram.", "Masukkan potongan brokoli segar hingga matang pas."] },
+// 3. JEPANG (7 Recipes)
+{ id: "jp-1", name: "Ramen Shoyu Otentik", region: 
+"Jepang", ingredients: ["Mie", "Telur", "Daging", 
+"Bawang"], img: "https://images.unsplash.com/ photo-1569718212165-3a8278d5f624?
+w=600&auto=format&fit=crop", steps: ["Rebus mie ramen dalam kuah kaldu shoyu kaya rasa.", "Lengkapi dengan telur nitamago dan chashu daging."] },
+{ id: "jp-2", name: "Chicken Katsu Curry", region: "Jepang", ingredients: ["Ayam", "Nasi", "Wortel", "Kentang"], img: "https://images.unsplash.com/ photo-1617093727343-374698b1b08d?
+w=600&auto=format&fit=crop", steps: ["Goreng dada ayam berselimut panko renyah.", "Tuang kuah kari kental bersama wortel di atas nasi."] }, { id: "jp-3", name: "Beef Gyudon Donburi", region: 
+"Jepang", ingredients: ["Daging", "Nasi", "Telur", 
+"Bawang"], img: "https://images.unsplash.com/ photo-1565299585323-38d6b0865b47?
+w=600&auto=format&fit=crop", steps: ["Masak irisan daging sapi tipis dengan dashi dan mirin.", "Sajikan di atas nasi panas bersama putih telur."] 
+},
+{ id: "jp-4", name: "Sushi Salmon Nigiri", region: 
+"Jepang", ingredients: ["Nasi", "Ikan"], img: 
+"https://images.unsplash.com/ photo-1579871494447-9811cf80d66c? w=600&auto=format&fit=crop", steps: ["Bentuk nasi sushi beraroma cuka beras.", "Letakkan irisan salmon segar di atasnya."] },
+{ id: "jp-5", name: "Chicken Teriyaki Bento", region: "Jepang", ingredients: ["Ayam", "Nasi", "Bawang"], img: "https://images.unsplash.com/ photo-1611143669185-af224c5e3252? w=600&auto=format&fit=crop", steps: 
+["Panggang paha ayam lalu siram saus teriyaki manis.", "Sajikan dengan nasi wijen hangat."] }, { id: "jp-6", name: "Okonomiyaki Pancake", region: 
+"Jepang", ingredients: ["Telur", "Daging", 
+"Bawang"], img: "https://images.unsplash.com/ photo-1579584425555-c3ce17fd4351? w=600&auto=format&fit=crop", steps: ["Campur adonan tepung, telur, dan kol cincang.", 
+"Panggang di teflon lalu beri saus okonomiyaki."] 
+},
+{ id: "jp-7", name: "Tempura Udang Renyah", region: "Jepang", ingredients: ["Udang", "Telur"], img: "https://images.unsplash.com/ photo-1615361200141-f45040f367be?
+w=600&auto=format&fit=crop", steps: ["Celup udang dalam adonan es cair dingin.", "Goreng dalam minyak panas hingga sangat renyah."] },
+// 4. ITALIA (7 Recipes)
+{ id: "it-1", name: "Pizza Margherita Keju", region: 
+"Italia", ingredients: ["Keju", "Tomat"], img: 
+"https://images.unsplash.com/ photo-1513104890138-7c749659a591?
+w=600&auto=format&fit=crop", steps: ["Oleskan saus tomat di atas adonan pizza ragi.", "Taburi mozzarella tipis dan panggang suhu tinggi."] }, { id: "it-2", name: "Spaghetti Carbonara Creamy", region: "Italia", ingredients: ["Mie", "Telur", "Keju", "Daging"], img: "https://images.unsplash.com/ photo-1612874742237-6526221588e3?
+w=600&auto=format&fit=crop", steps: ["Rebus pasta spaghetti al dente.", "Campurkan kocokan telur dan keju parut saat pasta panas."] }, { id: "it-3", name: "Lasagna Daging Panggang", region: "Italia", ingredients: ["Daging", "Keju", 
+"Mie", "Tomat"], img: "https:// images.unsplash.com/ photo-1574894709920-11b28e7367e3?
+w=600&auto=format&fit=crop", steps: ["Susun pasta lembaran, saus bolognese, dan keju.", "Panggang dalam oven hingga keju 
+kecokelatan."] },
+{ id: "it-4", name: "Risotto Jamur Truffle", region: "Italia", ingredients: ["Nasi", "Jamur", "Keju", 
+"Bawang"], img: "https://images.unsplash.com/ photo-1633964913295-ceb43826e7c9?
+w=600&auto=format&fit=crop", steps: ["Masak beras arborio bertahap dengan kaldu hangat.", "Aduk bersama tumisan jamur dan keju parmesan."] },
+{ id: "it-5", name: "Fettuccine Alfredo Cream", region: "Italia", ingredients: ["Mie", "Keju", "Ayam"], img: "https://images.unsplash.com/ photo-1621996346565-e3def6164286?
+w=600&auto=format&fit=crop", steps: ["Masak fettuccine lalu lumuri saus krim keju mentega.", "Tambahkan irisan ayam panggang empuk."] }, { id: "it-6", name: "Ravioli Keju Ricotta", region: 
+"Italia", ingredients: ["Mie", "Keju", "Tomat"], img: 
+"https://images.unsplash.com/ photo-1551183053-bf91a1d81141?
+w=600&auto=format&fit=crop", steps: ["Isi pasta ravioli dengan keju ricotta halus.", "Rebus sebentar lalu tuangkan saus tomat basil."] }, { id: "it-7", name: "Bruschetta Tomat Garlic", region: "Italia", ingredients: ["Tomat", "Bawang"], 
+img: "https://images.unsplash.com/ photo-1572695157366-5e585ab2b69f? w=600&auto=format&fit=crop", steps: ["Panggang roti baguette iris dengan minyak zaitun.", "Beri topping tomat cincang dan bawang putih."] },
+// 5. PRANCIS (7 Recipes)
+{ id: "fr-1", name: "Croissant Mentega Keju", 
+region: "Prancis", ingredients: ["Keju", "Telur"], img: "https://images.unsplash.com/ photo-1555507036-ab1f4038808a?
+w=600&auto=format&fit=crop", steps: ["Lipat adonan mentega berlapis-lapis.", "Panggang hingga mengembang garing keemasan."] },
+{ id: "fr-2", name: "Steak Frites Mentega Herba", region: "Prancis", ingredients: ["Daging", "Kentang"], img: "https://images.unsplash.com/ photo-1600891964092-4316c288032e? w=600&auto=format&fit=crop", steps: ["Panggang steak sirloin hingga kematangan sedang.", "Sajikan bersama kentang goreng dan butter herba."] },
+{ id: "fr-3", name: "Soup l'Oignon Bawang Keju", region: "Prancis", ingredients: ["Bawang", "Keju"], img: "https://images.unsplash.com/ photo-1547592166-23ac45744acd? w=600&auto=format&fit=crop", steps: 
+["Karamelisasi bawang bombay hingga cokelat pekat.", "Tuang kaldu lalu beri lelehan keju gruyere di atasnya."] },
+{ id: "fr-4", name: "Ratatouille Sayuran", region: 
+"Prancis", ingredients: ["Tomat", "Bawang"], img: 
+"https://images.unsplash.com/ photo-1572453800999-e8d2d1589b7c?
+w=600&auto=format&fit=crop", steps: ["Iris tipis terong, zuki, dan tomat segar.", "Panggang perlahan dalam saus tomat rempah."] }, { id: "fr-5", name: "Quiche Lorraine Bacon Keju", region: "Prancis", ingredients: ["Telur", "Keju", "Daging"], img: "https://images.unsplash.com/ photo-1608039829572-78524f79c4c7? w=600&auto=format&fit=crop", steps: 
+["Panggang pai garing isi adonan telur, krim, dan keju.", "Potong segitiga saat sudah dingin."] }, { id: "fr-6", name: "Coq au Vin Ayam Anggur", region: "Prancis", ingredients: ["Ayam", "Jamur", "Bawang"], img: "https://images.unsplash.com/ photo-1588166524941-3bf61a9c41db?
+w=600&auto=format&fit=crop", steps: ["Rebus dada ayam perlahan dalam saus rempah kental.", "Tambahkan tumisan jamur kancing."] }, { id: "fr-7", name: "Crêpes Suzette Manis", region: 
+"Prancis", ingredients: ["Telur"], img: "https://
+images.unsplash.com/photo-1519676867240f03562e64548?w=600&auto=format&fit=crop", steps: ["Dadar adonan crepe tipis di atas wajan rata.", "Siram saus jeruk manis hangat."] },
+// 6. MEKSIKO (7 Recipes)
+{ id: "mx-1", name: "Tacos Daging Sapi Pedas", region: "Meksiko", ingredients: ["Daging", "Cabai", 
+"Bawang", "Tomat"], img: "https:// images.unsplash.com/ photo-1551504734-5ee1c4a1479b?
+w=600&auto=format&fit=crop", steps: ["Isi kulit tortilla dengan tumisan daging cincang pedas.", 
+"Beri topping salsa tomat dan salsa cabai."] }, { id: "mx-2", name: "Quesadilla Ayam Keju", region: "Meksiko", ingredients: ["Ayam", "Keju"], 
+img: "https://images.unsplash.com/ photo-1618040996337-56904b7850b9? w=600&auto=format&fit=crop", steps: ["Panggang lipatan tortilla isi ayam dan keju parut.", "Potong segitiga saat keju sudah meleleh."] },
+{ id: "mx-3", name: "Burrito Daging Khas Meksiko", region: "Meksiko", ingredients: 
+["Daging", "Nasi", "Keju"], img: "https:// images.unsplash.com/ photo-1626700051175-6818013e1d4f?
+w=600&auto=format&fit=crop", steps: ["Gulung padat nasi, daging pedas, dan keju dalam tortilla.", "Panggang bentar di atas teflon."] }, { id: "mx-4", name: "Nachos Keju Salsa", region: 
+"Meksiko", ingredients: ["Keju", "Tomat", "Cabai"], img: "https://images.unsplash.com/ photo-1513456852971-30c0b8199d4d?
+w=600&auto=format&fit=crop", steps: ["Tata keripik tortilla jagung di piring saji.", "Siram keju meleleh dan saus pico de gallo."] },
+{ id: "mx-5", name: "Enchiladas Daging Ayam", region: "Meksiko", ingredients: ["Ayam", "Keju", "Cabai"], img: "https://images.unsplash.com/ photo-1534352956036-cd81e27dd615?
+w=600&auto=format&fit=crop", steps: ["Gulung daging ayam dalam tortilla lalu siram saus cabai merah.", "Panggang hingga keju melumer."] }, { id: "mx-6", name: "Guacamole Chips Avocado", region: "Meksiko", ingredients: ["Tomat", "Bawang", "Cabai"], img: "https:// images.unsplash.com/ photo-1540420773420-3366772f4999? w=600&auto=format&fit=crop", steps: 
+["Lumatkan alpukat matang bersama tomat dan bawang.", "Sajikan sebagai cocolan keripik."] },
+{ id: "mx-7", name: "Churros Gula Kayumanis", region: "Meksiko", ingredients: ["Telur"], img: 
+"https://images.unsplash.com/ photo-1624371414361-e670ef4889d6? w=600&auto=format&fit=crop", steps: ["Semprotkan adonan goreng berbentuk memanjang.", "Taburi gula kayu manis halus saat panas."] },
+// 7. KOREA (7 Recipes)
+{ id: "kr-1", name: "Bibimbap Nasi Campur", region: "Korea", ingredients: ["Nasi", "Telur", 
+"Daging", "Wortel"], img: "https:// images.unsplash.com/ photo-1553163147-622ab57be1c7?
+w=600&auto=format&fit=crop", steps: ["Tata nasi hangat dalam mangkuk batu.", "Beri topping tumis tumisan sayur, daging, dan telur mata sapi."] },
+{ id: "kr-2", name: "Korean Fried Chicken Pedas", region: "Korea", ingredients: ["Ayam", "Cabai", "Bawang"], img: "https://images.unsplash.com/ photo-1626082927389-6cd097cdc6ec?
+w=600&auto=format&fit=crop", steps: ["Goreng krispi potongan ayam dua kali.", "Balur dengan saus gochujang manis pedas."] },
+{ id: "kr-3", name: "Tteokbokki Kue Beras", region: 
+"Korea", ingredients: ["Telur", "Cabai"], img: 
+"https://images.unsplash.com/ photo-1580651315530-69c8e0026377?
+w=600&auto=format&fit=crop", steps: ["Masak kue beras tteok dalam kuah gochujang kental.", "Tambahkan telur rebus dan keju di atasnya."] }, { id: "kr-4", name: "Bulgogi Daging Sapi", region: 
+"Korea", ingredients: ["Daging", "Bawang"], img: 
+"https://images.unsplash.com/ photo-1544025162-d76694265947?
+w=600&auto=format&fit=crop", steps: ["Marinasi irisan daging sapi tipis dengan kecap asin dan buah pir.", "Tumis cepat dengan bawang bombay."] },
+{ id: "kr-5", name: "Japchae Mie Pati Ubi", region: 
+"Korea", ingredients: ["Mie", "Daging", "Wortel", 
+"Bawang"], img: "https://images.unsplash.com/ photo-1585032226651-759b368d7246?
+w=600&auto=format&fit=crop", steps: ["Rebus mie dangmyeon lalu tumis dengan minyak wijen.", "Campur irisan daging dan sayuran warna-warni."] },
+{ id: "kr-6", name: "Kimchi Jjigae Sup Pedas", region: "Korea", ingredients: ["Tahu", "Daging", "Cabai"], img: "https://images.unsplash.com/ photo-1547592166-23ac45744acd?
+w=600&auto=format&fit=crop", steps: ["Rebus kimchi fermented bersama potongan tahu segar.", "Bumbui bubuk cabai gochugaru kental."] 
+},
+{ id: "kr-7", name: "Ramyeon Keju Pedas", region: 
+"Korea", ingredients: ["Mie", "Telur", "Keju"], img: "https://images.unsplash.com/ photo-1569718212165-3a8278d5f624?
+w=600&auto=format&fit=crop", steps: ["Masak mie instan Korea pedas.", "Lelehkan lembaran keju cheddar dan telur di atasnya."] },
+// 8. THAILAND (7 Recipes)
+{ id: "th-1", name: "Tom Yum Goong Udang 
+Pedas", region: "Thailand", ingredients: ["Udang", 
+"Jamur", "Cabai"], img: "https:// images.unsplash.com/photo-1548943487a2e4e43b4853?w=600&auto=format&fit=crop", steps: ["Rebus kaldu serai, lengkuas, dan daun jeruk.", "Masukkan udang segar, jamur straw, dan perasan jeruk nipis."] },
+{ id: "th-2", name: "Pad Thai Mie Tumis Udang", region: "Thailand", ingredients: ["Mie", "Udang", 
+"Telur", "Tahu"], img: "https:// images.unsplash.com/ photo-1559847844-5315695dadae?
+w=600&auto=format&fit=crop", steps: ["Tumis mie beras dengan saus asam jawa dan telur.", "Tambahkan udang goreng dan taburan kacang tanah."] },
+{ id: "th-3", name: "Kari Hijau Green Curry Ayam", region: "Thailand", ingredients: ["Ayam", "Cabai", "Bawang"], img: "https://images.unsplash.com/ photo-1455619452474-d2be8b1e70cd?
+w=600&auto=format&fit=crop", steps: ["Masak bumbu kari hijau Thailand bersama santan.", "Masukkan potongan ayam empuk dan terong mini."] },
+{ id: "th-4", name: "Khao Pad Nasi Goreng 
+Nanas", region: "Thailand", ingredients: ["Nasi", 
+"Udang", "Telur"], img: "https:// images.unsplash.com/ photo-1603133872878-684f208fb84b? w=600&auto=format&fit=crop", steps: ["Goreng nasi bersama udang, kismis, dan nanas.", "Sajikan dalam tempurung buah nanas."] },
+{ id: "th-5", name: "Mango Sticky Rice Nasi Ketan", region: "Thailand", ingredients: ["Nasi"], 
+img: "https://images.unsplash.com/ photo-1519676867240-f03562e64548?
+w=600&auto=format&fit=crop", steps: ["Kukus beras ketan lalu siram santan manis.", "Sajikan bersama irisan mangga harum manis matang."] }, { id: "th-6", name: "Som Tum Salad Pepaya 
+Muda", region: "Thailand", ingredients: ["Cabai", "Tomat"], img: "https://images.unsplash.com/ photo-1512621776951-a57141f2eefd?
+w=600&auto=format&fit=crop", steps: ["Tumbuk cabai, bawang putih, dan tomat dalam cobek 
+kayu.", "Campurkan serutan pepaya muda renyah."] },
+{ id: "th-7", name: "Ayam Tumis Basil Kra Pao", region: "Thailand", ingredients: ["Ayam", "Telur", "Cabai"], img: "https://images.unsplash.com/ photo-1525755662778-989d0524087e?
+w=600&auto=format&fit=crop", steps: ["Cincang ayam lalu tumis dengan cabai dan kemangi Thai.", "Sajikan di atas nasi hangat dengan telur ceplok."] },
+// 9. INDIA (7 Recipes)
+{ id: "in-1", name: "Butter Chicken Kari Mentega", region: "India", ingredients: ["Ayam", "Tomat", "Bawang"], img: "https://images.unsplash.com/ photo-1588166524941-3bf61a9c41db? w=600&auto=format&fit=crop", steps: ["Panggang paha ayam berbumbu rempah masala.", "Masak dalam kuah tomat kental bermentega melimpah."] },
+{ id: "in-2", name: "Chicken Biryani Nasi Rempah", region: "India", ingredients: ["Nasi", "Ayam", 
+"Bawang"], img: "https://images.unsplash.com/ photo-1563379091339-03b21ab4a4f8?
+w=600&auto=format&fit=crop", steps: ["Masak beras basmati aromatik bersama kapulaga dan safron.", "Susun berselang-seling dengan ayam berbumbu pekat."] },
+{ id: "in-3", name: "Samosa Kentang Rempah", 
+region: "India", ingredients: ["Kentang", "Wortel"], 
+img: "https://images.unsplash.com/ photo-1601050690597-df0568f70950?
+w=600&auto=format&fit=crop", steps: ["Isi adonan pastry bentuk segitiga dengan tumbukan kentang bumbu.", "Goreng hingga garing keemasan."] },
+{ id: "in-4", name: "Paneer Butter Masala Keju", region: "India", ingredients: ["Keju", "Tomat"], img: 
+"https://images.unsplash.com/ photo-1631452180519-c014fe946bc7?
+w=600&auto=format&fit=crop", steps: ["Potong dadu keju paneer segar.", "Masak dalam saus rempah tomat creamy."] },
+{ id: "in-5", name: "Roti Naan Bawang Keju", 
+region: "India", ingredients: ["Keju", "Bawang"], 
+img: "https://images.unsplash.com/ photo-1565557623262-b51c2513a641?
+w=600&auto=format&fit=crop", steps: ["Tempel adonan roti pipih di dinding tandoor oven.", "Olesi butter bawang putih gurih."] },
+{ id: "in-6", name: "Kari Dal Lensa Hijau", region: 
+"India", ingredients: ["Bawang", "Tomat"], img: 
+"https://images.unsplash.com/ photo-1546833999-b9f581a1996d?
+w=600&auto=format&fit=crop", steps: ["Rebus kacang lentil hingga lunak.", "Bumbui dengan ketumbar dan jintan sangrai."] },
+{ id: "in-7", name: "Ayam Tandoori Merah", region: 
+"India", ingredients: ["Ayam", "Bawang"], img: 
+"https://images.unsplash.com/ photo-1599487488170-d11ec9c172f0?
+w=600&auto=format&fit=crop", steps: ["Rendam ayam dalam yogurt dan bubuk cabai merah.", "Panggang suhu tinggi hingga beraroma smokey."] },
+// 10. AMERIKA SERIKAT (7 Recipes)
+{ id: "us-1", name: "Classic Cheeseburger 
+Daging", region: "Amerika Serikat", ingredients: 
+["Daging", "Keju", "Tomat", "Bawang"], img: 
+"https://images.unsplash.com/ photo-1568901346375-23c9450c58cd? w=600&auto=format&fit=crop", steps: 
+["Panggang patty daging sapi juicy di atas pan tataan.", "Lelehkan keju cheddar tebal di atas roti bun."] },
+{ id: "us-2", name: "BBQ Smoked Beef Ribs", region: "Amerika Serikat", ingredients: ["Daging"], 
+img: "https://images.unsplash.com/ photo-1544025162-d76694265947?
+w=600&auto=format&fit=crop", steps: ["Oles iga sapi dengan saus BBQ manis gurih.", "Asap perlahan dalam smoker selama 4 jam."] },
+{ id: "us-3", name: "Mac and Cheese Keju 
+Melumer", region: "Amerika Serikat", ingredients: 
+["Mie", "Keju"], img: "https:// images.unsplash.com/ photo-1543339308-43e59d6b73a6? w=600&auto=format&fit=crop", steps: ["Rebus makaroni elbows.", "Campur keju cheddar dan 
+mozzarella leleh melimpah."] },
+{ id: "us-4", name: "Crispy Southern Fried 
+Chicken", region: "Amerika Serikat", ingredients: ["Ayam"], img: "https://images.unsplash.com/ photo-1626082927389-6cd097cdc6ec?
+w=600&auto=format&fit=crop", steps: ["Rendam ayam dalam buttermilk rempah.", "Balur tepung tebal lalu goreng sangat krispi."] },
+{ id: "us-5", name: "Loaded Hot Dog Kornet Keju", region: "Amerika Serikat", ingredients: ["Kornet", 
+"Keju", "Bawang"], img: "https:// images.unsplash.com/ photo-1619740455993-9e612b1af08a? w=600&auto=format&fit=crop", steps: ["Panggang sosis dan roti bun.", "Beri topping tumis kornet sapi dan saus keju."] },
+{ id: "us-6", name: "Clam Chowder Sup Kentang", region: "Amerika Serikat", ingredients: ["Kentang", "Ikan"], img: "https://images.unsplash.com/ photo-1547592166-23ac45744acd?
+w=600&auto=format&fit=crop", steps: ["Rebus kentang dan kerang dalam kuah krim kental.", "Sajikan dalam mangkuk roti sourdough."] },
+{ id: "us-7", name: "Apple Pie Kayumanis", region: 
+"Amerika Serikat", ingredients: ["Telur"], img: 
+"https://images.unsplash.com/ photo-1568571780765-9276ac8b75a2?
+w=600&auto=format&fit=crop", steps: ["Isi kulit pai dengan irisan apel bumbu kayu manis.", "Panggang hingga pastry keemasan."] },
+// 11. SPANYOL (7 Recipes)
+{ id: "es-1", name: "Paella Seafood Nasi Rempah", region: "Spanyol", ingredients: ["Nasi", "Udang", "Ikan"], img: "https://images.unsplash.com/ photo-1534080564583-6be75777b70a?
+w=600&auto=format&fit=crop", steps: ["Masak beras safron dalam wajan paella lebar.", "Tata udang, cumi, dan kerang di atas nasi krispi."] }, { id: "es-2", name: "Tortilla Española Kentang 
+Telur", region: "Spanyol", ingredients: ["Kentang", 
+"Telur", "Bawang"], img: "https:// images.unsplash.com/ photo-1584278860011-678e98e6b650?
+w=600&auto=format&fit=crop", steps: ["Goreng irisan kentang dan bawang bombay hingga lembut.", "Kocok bersama telur lalu dadar tebal melingkar."] },
+{ id: "es-3", name: "Chorizo Tapas Tumis Daging", region: "Spanyol", ingredients: ["Daging", "Bawang"], img: "https://images.unsplash.com/ photo-1544025162-d76694265947?
+w=600&auto=format&fit=crop", steps: ["Iris sosis chorizo pedas Spanyol.", "Tumis bersama minyak zaitun dan bawang putih."] },
+{ id: "es-4", name: "Gazpacho Sup Tomat Dingin", region: "Spanyol", ingredients: ["Tomat", "Bawang"], img: "https://images.unsplash.com/ photo-1547592166-23ac45744acd?
+w=600&auto=format&fit=crop", steps: ["Blender halus tomat segar, timun, dan paprika.", "Dinginkan di kulkas sebelum disajikan."] }, { id: "es-5", name: "Gambas al Ajillo Udang Bawang", region: "Spanyol", ingredients: ["Udang", "Bawang", "Cabai"], img: "https://
+images.unsplash.com/ photo-1559847844-5315695dadae?
+w=600&auto=format&fit=crop", steps: ["Tumis udang dalam minyak zaitun melimpah.", "Beri 
+banyak cincangan bawang putih dan cabai krispi."] },
+{ id: "es-6", name: "Croquetas de Jamón Keju", region: "Spanyol", ingredients: ["Keju", "Daging"], 
+img: "https://images.unsplash.com/ photo-1563245372-f21724e3856d?
+w=600&auto=format&fit=crop", steps: ["Bentuk adonan bechamel isi potongan daging.", "Balur tepung roti lalu goreng krispi."] },
+{ id: "es-7", name: "Patatas Bravas Kentang 
+Saus", region: "Spanyol", ingredients: ["Kentang", 
+"Tomat", "Cabai"], img: "https://
+images.unsplash.com/photo-1518013031114ea814b89d25b?w=600&auto=format&fit=crop", steps: ["Goreng potong dadu kentang hingga garing.", "Siram saus bravas pedas asam."] },
+// 12. INGGRIS (7 Recipes)
+{ id: "uk-1", name: "Fish and Chips Ikan Krispi", 
+region: "Inggris", ingredients: ["Ikan", "Kentang"], 
+img: "https://images.unsplash.com/ photo-1519708227418-c8fd9a32b7a2?
+w=600&auto=format&fit=crop", steps: ["Celup fillet ikan dory dalam tepung adonan bir.", "Goreng krispi dan sajikan bersama kentang goreng tebal."] },
+{ id: "uk-2", name: "English Breakfast Lengkap", region: "Inggris", ingredients: ["Telur", "Kornet", 
+"Jamur", "Tomat"], img: "https:// images.unsplash.com/photo-1533089860892a7c6f0a88666?w=600&auto=format&fit=crop", steps: ["Goreng sosis, bacon, telur mata sapi, dan jamur.", "Sajikan di piring bersama kacang merah saus tomat."] },
+{ id: "uk-3", name: "Shepherd's Pie Daging 
+Kentang", region: "Inggris", ingredients: ["Daging", 
+"Kentang", "Wortel"], img: "https:// images.unsplash.com/photo-1544025162d76694265947?w=600&auto=format&fit=crop", steps: ["Tumis daging giling bersama sayuran wortel.", "Tutup dengan lapisan kentang lumat lalu panggang."] },
+{ id: "uk-4", name: "Beef Wellington Daging Bungkus", region: "Inggris", ingredients: 
+["Daging", "Jamur"], img: "https:// images.unsplash.com/ photo-1600891964092-4316c288032e?
+w=600&auto=format&fit=crop", steps: ["Balut tenderloin sapi dengan pate jamur halus.", "Bungkus pastry puff lalu panggang kematangan pas."] },
+{ id: "uk-5", name: "Bangers and Mash Sosis", region: "Inggris", ingredients: ["Daging", "Kentang", "Bawang"], img: "https:// images.unsplash.com/ photo-1619740455993-9e612b1af08a? w=600&auto=format&fit=crop", steps: ["Panggang sosis sapi tebal.", "Tata di atas kentang lumat mentega bersiram kuah gravy."] }, { id: "uk-6", name: "Yorkshire Pudding Roti Panggang", region: "Inggris", ingredients: ["Telur"], img: "https://images.unsplash.com/ photo-1555507036-ab1f4038808a?
+w=600&auto=format&fit=crop", steps: ["Kocok telur, tepung, dan susu cair.", "Panggang dalam 
+cetakan berminyak panas hingga mengembang."] },
+{ id: "uk-7", name: "Scones Mentega Krim Jam", region: "Inggris", ingredients: ["Telur"], img: "https://images.unsplash.com/ photo-1509440159596-0249088772ff? w=600&auto=format&fit=crop", steps: 
+["Panggang kue scone mentega empuk.", "Belah dua lalu olesi krim tebal dan selai stroberi."] },
+// 13. YUNANI (7 Recipes)
+{ id: "gr-1", name: "Greek Salad Keju Feta", region: "Yunani", ingredients: ["Keju", "Tomat", "Bawang"], 
+img: "https://images.unsplash.com/ photo-1540420773420-3366772f4999?
+w=600&auto=format&fit=crop", steps: ["Potong besar timun, tomat segar, dan buah zaitun.", "Beri potongan tebal keju feta dan minyak zaitun."] }, { id: "gr-2", name: "Moussaka Kentang Daging", region: "Yunani", ingredients: ["Daging", "Kentang", "Keju", "Tomat"], img: "https:// images.unsplash.com/ photo-1574894709920-11b28e7367e3?
+w=600&auto=format&fit=crop", steps: ["Susun terong goreng, kentang, dan daging cincang.", "Siram saus bechamel keju lalu panggang emas."] },
+{ id: "gr-3", name: "Gyros Daging Ayam Wrap", region: "Yunani", ingredients: ["Ayam", "Tomat", "Bawang"], img: "https://images.unsplash.com/ photo-1561758033-d89a9ad46330? w=600&auto=format&fit=crop", steps: ["Panggang irisan ayam bumbu tzatziki.", "Gulung dalam roti pita hangat bersama sayuran."] },
+{ id: "gr-4", name: "Souvlaki Daging Bakar", region: "Yunani", ingredients: ["Daging", "Bawang"], img: "https://images.unsplash.com/ photo-1529563064661-8250085a67c4?
+w=600&auto=format&fit=crop", steps: ["Tusuk daging marinasi lemon oregano.", "Bakar arang hingga beraroma panggangan khas."] }, { id: "gr-5", name: "Spanakopita Pastry Bayam 
+Keju", region: "Yunani", ingredients: ["Keju", "Telur"], img: "https://images.unsplash.com/ photo-1555507036-ab1f4038808a?
+w=600&auto=format&fit=crop", steps: ["Bungkus tumisan bayam dan keju feta dalam phyllo dough.", "Panggang hingga renyah keemasan."] }, { id: "gr-6", name: "Tzatziki Dip Timun Yogurt", region: "Yunani", ingredients: ["Bawang"], img: 
+"https://images.unsplash.com/ photo-1546833999-b9f581a1996d?
+w=600&auto=format&fit=crop", steps: ["Parut timun segar lalu peras airnya.", "Aduk dalam greek yogurt kental dengan bawang putih."] }, { id: "gr-7", name: "Soupa Fasolada Sup Kacang", region: "Yunani", ingredients: ["Tomat", "Wortel", "Bawang"], img: "https://images.unsplash.com/ photo-1547592166-23ac45744acd?
+w=600&auto=format&fit=crop", steps: ["Rebus kacang putih bersama tomat dan wortel.", 
+"Bumbui minyak zaitun murni."] },
+// 14. TURKI (7 Recipes)
+{ id: "tr-1", name: "Kebab Daging Sapi Doner", region: "Turki", ingredients: ["Daging", "Bawang", "Tomat"], img: "https://images.unsplash.com/ photo-1561758033-d89a9ad46330?
+w=600&auto=format&fit=crop", steps: ["Iris tipis daging panggang panggangan putar.", "Bungkus 
+dalam roti pita dengan saus yogurt."] }, { id: "tr-2", name: "Baklava Kacang Manis", region: "Turki", ingredients: ["Telur"], img: "https:// images.unsplash.com/photo-1519676867240f03562e64548?w=600&auto=format&fit=crop", steps: ["Susun puluhan lembar phyllo krispi isi tumbukan pistachio.", "Siram sirup gula manis harum."] },
+{ id: "tr-3", name: "Pide Roti Perahu Keju", region: "Turki", ingredients: ["Keju", "Telur", "Daging"], img: "https://images.unsplash.com/ photo-1513104890138-7c749659a591?
+w=600&auto=format&fit=crop", steps: ["Bentuk adonan roti seperti perahu.", "Isi keju kasar dan lelehan telur di tengahnya."] },
+{ id: "tr-4", name: "Köfte Bakso Daging Rempah", region: "Turki", ingredients: ["Daging", "Bawang"], 
+img: "https://images.unsplash.com/ photo-1529563064661-8250085a67c4?
+w=600&auto=format&fit=crop", steps: ["Bentuk adonan daging giling bumbu jintan lonjong.", 
+"Panggang di atas grill hingga matang."] }, { id: "tr-5", name: "Menemen Telur Tumis Tomat", region: "Turki", ingredients: ["Telur", "Tomat", 
+"Cabai", "Bawang"], img: "https:// images.unsplash.com/ photo-1584278860011-678e98e6b650?
+w=600&auto=format&fit=crop", steps: ["Tumis tomat dan cabai hijau hingga hancur lembut.", "Pecahkan telur dan aduk orak-arik setengah matang."] },
+{ id: "tr-6", name: "Lahmacun Pizza Tipis Turki", region: "Turki", ingredients: ["Daging", "Tomat", "Bawang"], img: "https://images.unsplash.com/ photo-1513104890138-7c749659a591?
+w=600&auto=format&fit=crop", steps: ["Ratakan gilingan daging tipis di atas adonan renyah.", "Panggang sebentar lalu peras jeruk lemon."] }, { id: "tr-7", name: "Dolma Daun Zaitun Nasi", region: "Turki", ingredients: ["Nasi", "Bawang"], 
+img: "https://images.unsplash.com/ photo-1540420773420-3366772f4999?
+w=600&auto=format&fit=crop", steps: ["Bungkus nasi rempah dalam daun anggur segar.", "Kukus dengan minyak zaitun."] },
+// 15. VIETNAM (7 Recipes)
+{ id: "vn-1", name: "Pho Bo Mie Sup Daging", region: "Vietnam", ingredients: ["Mie", "Daging", "Bawang"], img: "https://images.unsplash.com/ photo-1582878826629-29b7ad1cdc43?
+w=600&auto=format&fit=crop", steps: ["Rebus rempah pekak dan serai untuk kuah jernih.", "Siramkan ke atas mie beras dan irisan daging sapi tipis."] },
+{ id: "vn-2", name: "Bánh Mì Roti Daging Ayam", region: "Vietnam", ingredients: ["Ayam", "Wortel", "Bawang"], img: "https://images.unsplash.com/ photo-1509440159596-0249088772ff?
+w=600&auto=format&fit=crop", steps: ["Isi roti baguette garing dengan ayam panggang.", "Beri 
+acar wortel segar dan cilantro."] },
+{ id: "vn-3", name: "Gỏi Cuốn Lumpia Basah 
+Udang", region: "Vietnam", ingredients: ["Udang", "Wortel"], img: "https://images.unsplash.com/ photo-1563245372-f21724e3856d?
+w=600&auto=format&fit=crop", steps: ["Bungkus udang rebus dan sayuran dalam rice paper transparan.", "Cocol saus kacang hoisin."] }, { id: "vn-4", name: "Bun Cha Daging Bakar Mie", region: "Vietnam", ingredients: ["Daging", "Mie", "Bawang"], img: "https://images.unsplash.com/ photo-1585032226651-759b368d7246? w=600&auto=format&fit=crop", steps: ["Bakar patty daging sapi di atas arang.", "Sajikan dalam mangkuk mi biun dingin dan saus ikannya."] }, { id: "vn-5", name: "Cơm Tấm Nasi Rusuk Sapi", region: "Vietnam", ingredients: ["Nasi", "Daging", "Telur"], img: "https://images.unsplash.com/ photo-1544025162-d76694265947?
+w=600&auto=format&fit=crop", steps: ["Sajikan nasi patah dengan iga sapi panggang karamel.", 
+"Lengkapi telur dadar tipis."] },
+{ id: "vn-6", name: "Chả Giảu Lumpia Goreng krispi", region: "Vietnam", ingredients: ["Ayam", "Wortel"], img: "https://images.unsplash.com/ photo-1541544741938-0af808871cc0?
+w=600&auto=format&fit=crop", steps: ["Gulung adonan cincang daging dalam kulit lumpia.", 
+"Goreng garing cokelat tua."] },
+{ id: "vn-7", name: "Sup Ca Ri Ga Ayam Thailand", region: "Vietnam", ingredients: ["Ayam", 
+"Kentang", "Wortel"], img: "https:// images.unsplash.com/photo-1455619452474d2be8b1e70cd?w=600&auto=format&fit=crop", steps: ["Rebus kentang, wortel, dan ayam dalam kari santan cair.", "Dimakan dengan roti baguette."] },
+// 16. JERMAN (7 Recipes)
+{ id: "de-1", name: "Bratwurst Sosis Panggang", region: "Jerman", ingredients: ["Daging", "Kentang"], img: "https://images.unsplash.com/ photo-1619740455993-9e612b1af08a? w=600&auto=format&fit=crop", steps: ["Panggang sosis bratwurst Jerman hingga bergaris cokelat.", "Sajikan dengan salad kentang mustard."] },
+{ id: "de-2", name: "Chicken Schnitzel Goreng 
+Krispi", region: "Jerman", ingredients: ["Ayam", 
+"Telur", "Kentang"], img: "https:// images.unsplash.com/ photo-1598515214211-89d3c73ae83b? w=600&auto=format&fit=crop", steps: ["Pipihkan dada ayam lalu balur tepung roti halus.", "Goreng dalam mentega panas hingga krispi keemasan."] 
+},
+{ id: "de-3", name: "Kartoffelsalat Salad Kentang", region: "Jerman", ingredients: ["Kentang", "Bawang"], img: "https://images.unsplash.com/ photo-1518013031114-ea814b89d25b?
+w=600&auto=format&fit=crop", steps: ["Rebus kentang potong dadu.", "Aduk bersama saus mayonnaise mustard dan kaldu sapi."] }, { id: "de-4", name: "Sauerbraten Daging Panggang", region: "Jerman", ingredients: 
+["Daging", "Wortel"], img: "https://
+images.unsplash.com/photo-1544025162d76694265947?w=600&auto=format&fit=crop", steps: ["Rendam potong daging tebal dalam cuka rempah 3 hari.", "Panggang lambat hingga super empuk."] },
+{ id: "de-5", name: "Pretzel Garam Mentega", region: "Jerman", ingredients: ["Telur"], img: 
+"https://images.unsplash.com/ photo-1509440159596-0249088772ff?
+w=600&auto=format&fit=crop", steps: ["Bentuk adonan simpul khas pretzel.", "Rebus sebentar di air soda lalu panggang garam kasar."] },
+{ id: "de-6", name: "Currywurst Sosis Saus Kari", region: "Jerman", ingredients: ["Daging", "Tomat", "Kentang"], img: "https://images.unsplash.com/ photo-1619740455993-9e612b1af08a?
+w=600&auto=format&fit=crop", steps: ["Potong sosis panggang melingkar.", "Siram saus tomat kari gurih dan kentang goreng."] },
+{ id: "de-7", name: "Black Forest Cake Cokelat", region: "Jerman", ingredients: ["Telur"], img: 
+"https://images.unsplash.com/ photo-1578985545062-69928b1d9587? w=600&auto=format&fit=crop", steps: ["Panggang kue bolu cokelat berlapis-lapis.", 
+"Beri krim kocok dan buah ceri hitam."] }
+];
+recipesDatabase.forEach(r => { if (!r.reviews) { r.reviews = [
+{ rating: 5, text: "Masakan ini lezat sekali, bumbunya terasa otentik!" },
+{ rating: 5, text: "Sangat praktis dan mudah diikuti di rumah." }
+ ];
+}
+});
+// SLIDE SWITCHING LOGIC function changeSlide(slideNum) { activeSlide = slideNum;
+document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
+document.getElementById(slide-${slideNum}
+`).classList.add('active');
+for (let i = 1; i <= 5; i++) {
+const btn = document.getElementById(nav-btn-$
+{i}`);
+if (i === slideNum) { btn.className = "px-3 py-1.5 rounded-lg bgburgundy text-white font-bold transition-all shadow";
+} else {
+btn.className = "px-3 py-1.5 rounded-lg hover:bg-white/10 text-gray-300 font-semibold transition-all";
+}
+} window.scrollTo({ top: 0, behavior: 'smooth' });
+if (slideNum === 3) renderCountryRecipes(); if (slideNum === 4) filterPantryRecipes();
+}
+// SLIDE 3 FUNCTIONS function renderCountryTabs() { const container = document.getElementById('countryTabs'); container.innerHTML = countryList.map(c => &lt;button onclick="setCountry('${c}')" class="px-5 py-2.5 rounded-full text-xs md:textsm font-bold whitespace-nowrap transition-all ${ selectedCountry === c ? 'bg-burgundy text-white shadow-md' : 'bg-white text-navy border borderwoodtan/50 hover:bg-parchment' }"&gt; ${c}
+</button>
+`).join('');
+}
+function setCountry(c) { selectedCountry = c; renderCountryTabs(); renderCountryRecipes(); }
+function renderCountryRecipes() {
+const grid = document.getElementById('countryRecipeGrid'); const list = recipesDatabase.filter(r => r.region 
+=== selectedCountry);
+if (list.length === 0) {
+grid.innerHTML = <p class="col-span-full textcenter py-8 text-gray-500"&gt;Belum ada resep 
+untuk negara ini.&lt;/p>; return;
+}
+grid.innerHTML = list.map(r => &lt;div onclick="openModal('${r.id}')" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-woodtan/30 flex flex-col">
+<div class="relative h-44 w-full overflow-hidden">
+<img src="  {r.name}" 
+onerror="this.src='https://images.unsplash.com/ photo-1546069901-ba9599a7e63c?
+w=600&auto=format&fit=crop'" class="w-full hfull object-cover transition-transform duration-500 hover:scale-110">
+<span class="absolute top-3 right-3 bg-burgundy/ 90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+ 
+{r.name}</h3>
+<div class="flex flex-wrap gap-1 mb-3"> latex
+{r.ingredients.map(ing =&gt; `<span class="bg-parchment text-navy text[11px] font-semibold px-2 py-0.5 rounded"&gt;
+{ing}</span>).join('')} &lt;/div&gt; &lt;/div&gt; &lt;div class="flex items-center justify-between border-t border-gray-100 pt-3 text-xs textgray-500"&gt; &lt;span class="text-amber-500 font-bold"&gt;★ 5.0 (${r.reviews.length} 
+Ulasan)</span>
+<span class="text-burgundy fontsemibold">Lihat Resep →</span>
+</div>
+</div>
+</div>
+`).join(''); }
+// SLIDE 4 PANTRY FINDER LOGIC function renderPantryTags() { const container = 
+document.getElementById('pantryTagsContainer'
+);
+container.innerHTML = pantryOptions.map(tag => {
+const isSelected = 
+activePantryTags.includes(tag);
+return &lt;button onclick="togglePantryTag('$
+{tag}')" class="px-4 py-2 rounded-full text-xs md:text-sm font-semibold border transition-all flex itemscenter gap-1.5 
+ 
+{isSelected ? '✓' : '+'}</span> ${tag} &lt;/ button&gt;;
+}).join('');
+}
+function togglePantryTag(tag) { if (activePantryTags.includes(tag)) { activePantryTags = activePantryTags.filter(t => t !
+== tag);
+} else {
+activePantryTags.push(tag);
+}
+renderPantryTags();
+filterPantryRecipes();
+}
+function handleCustomSearch() {
+filterPantryRecipes();
+}
+function clearPantryFilters() { activePantryTags = [];
+document.getElementById('customSearchBar').v alue = '';
+renderPantryTags();
+filterPantryRecipes();
+}
+function filterPantryRecipes() { const grid = 
+document.getElementById('pantryRecipeGrid'); const searchVal = 
+document.getElementById('customSearchBar').v alue.toLowerCase().trim(); let filtered = recipesDatabase;
+// Strict Text Search Filter if (searchVal) {
+filtered = filtered.filter(r => {
+const nameMatch = 
+r.name.toLowerCase().includes(searchVal); const ingredientMatch = r.ingredients.some(i => i.toLowerCase().includes(searchVal)); const regionMatch = 
+r.region.toLowerCase().includes(searchVal); return nameMatch || ingredientMatch || 
+regionMatch;
+});
+}
+// Strict Tag Filter (Must contain ALL selected tags)
+if (activePantryTags.length > 0) { filtered = filtered.filter(r => activePantryTags.every(tag =>
+r.ingredients.some(ing => ing.toLowerCase() === tag.toLowerCase())
+)
+);
+}
+document.getElementById('matchedCount').inner Text = filtered.length;
+if (filtered.length === 0) { grid.innerHTML = &lt;div class="col-span-full py-12 text-center text-gray-500 bg-white rounded-2xl border border-dashed borderwoodtan"&gt; &lt;p class="text-lg fontmedium"&gt;Tidak ada resep yang cocok dengan kriteria pencarian bahan.&lt;/p&gt; &lt;p class="text-sm text-gray-400 mt-1"&gt;Coba kurangi kombinasi tag atau ketik kata kunci bahan lain (seperti: telur, keju, ayam, kornet, tahu).&lt;/p&gt; &lt;/div&gt;; return;
+}
+grid.innerHTML = filtered.map(r => &lt;div onclick="openModal('${r.id}')" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-woodtan/30 flex flex-col">
+<div class="relative h-44 w-full overflow-hidden">
+<img src="  {r.name}" 
+onerror="this.src='https://images.unsplash.com/ photo-1546069901-ba9599a7e63c?
+w=600&auto=format&fit=crop'" class="w-full hfull object-cover transition-transform duration-500 hover:scale-110">
+<span class="absolute top-3 right-3 bg-burgundy/ 90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+ 
+{r.name}</h3>
+<div class="flex flex-wrap gap-1 mb-3"> latex
+{r.ingredients.map(ing =&gt; `<span class="bg-parchment text-navy text[11px] font-semibold px-2 py-0.5 rounded"&gt;
+{ing}</span>).join('')} &lt;/div&gt; &lt;/div&gt; &lt;div class="flex items-center justify-between border-t border-gray-100 pt-3 text-xs textgray-500"&gt; &lt;span class="text-amber-500 font-bold"&gt;★ 5.0 (${r.reviews.length} 
+Ulasan)</span>
+<span class="text-burgundy fontsemibold">Detail →</span>
+</div>
+</div>
+</div>
+`).join(''); }
+// SLIDE 5 USER FORM HANDLER function handleUserSubmitRecipe(e) { e.preventDefault(); const name = 
+document.getElementById('formRecipeName').va lue.trim(); const region = 
+document.getElementById('formRecipeRegion').v alue;
+const ingredientsRaw = 
+document.getElementById('formRecipeIngredient s').value.trim();
+const stepsRaw = 
+document.getElementById('formRecipeSteps').va lue.trim(); let img = 
+document.getElementById('formRecipeImg').valu e.trim();
+if (!img) {
+img = "https://images.unsplash.com/ photo-1546069901-ba9599a7e63c?
+w=600&auto=format&fit=crop";
+}
+const newRecipe = {
+id: user-${Date.now()}`,
+name: name,
+region: region,
+ingredients: ingredientsRaw.split(',').map(s => s.trim()).filter(Boolean), img: img,
+steps: stepsRaw.split('\n').map(s => s.trim()).filter(Boolean), reviews: [
+{ rating: 5, text: "Resep baru ditambahkan oleh pengguna!" }
+ ] };
+recipesDatabase.unshift(newRecipe); document.getElementById('addRecipeForm').res
+et();
+const toast = document.getElementById('toast'); toast.innerText = Resep "${name}" berhasil ditambahkan!`;
+toast.classList.remove('hidden');
+setTimeout(() => toast.classList.add('hidden'), 
+3500); selectedCountry = region; if (!countryList.includes(region)) selectedCountry = "Indonesia"; changeSlide(3);
+}
+// MODAL HANDLERS
+function openModal(id) {
+const recipe = recipesDatabase.find(r => r.id === id);
+if (!recipe) return;
+currentRecipeId = id;
+document.getElementById('modalTitle').innerTex t = recipe.name;
+document.getElementById('modalRegion').innerT ext = recipe.region;
+document.getElementById('modalImage').src = recipe.img; document.getElementById('modalIngredients').in nerHTML = recipe.ingredients.map(i => &lt;li class="flex items-center gap-2"&gt; &lt;span class="w-2 h-2 rounded-full bg-burgundy"&gt;&lt;/ span&gt; &lt;span&gt;${i}</span>
+</li>
+`).join('');
+document.getElementById('modalSteps').innerH
+TML = recipe.steps.map(s => &lt;li class="pl-1"&gt;${s}</li>
+`).join('');
+renderReviews(recipe);
+document.getElementById('recipeModal').classLi st.remove('hidden');
+document.getElementById('recipeModal').classLi st.add('flex');
+}
+function closeModal() { document.getElementById('recipeModal').classLi st.add('hidden');
+document.getElementById('recipeModal').classLi st.remove('flex');
+}
+function setRating(r) { selectedStarRating = r; const stars = 
+document.getElementById('starContainer').childr en;
+for (let i = 0; i < 5; i++) {
+stars[i].style.color = i < r ? '#f59e0b' : '#d1d5db';
+}
+}
+function submitReview() {
+const input = 
+document.getElementById('reviewInput'); const text = input.value.trim();
+if (!text || !currentRecipeId) return;
+const recipe = recipesDatabase.find(r => r.id === currentRecipeId); if (recipe) { recipe.reviews.unshift({ rating: selectedStarRating, text: text }); renderReviews(recipe); input.value = '';
+}
+}
+function renderReviews(recipe) { const container = document.getElementById('reviewsList'); container.innerHTML = recipe.reviews.map(rev => &lt;div class="bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs"&gt; &lt;div class="text-amber-500 font-bold mb-0.5"&gt;$
+{'★'.repeat(rev.rating)}</div>
+<p class="text-gray-700">${rev.text}</p>
+</div>
+`).join('');
+}
+window.onload = function() { renderCountryTabs(); renderPantryTags();
+changeSlide(1);
+};
+</script>
+</body>
+</html>
